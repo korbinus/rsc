@@ -3,7 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Test page for rsc</title>
-        <link type="text/css" href="/rsc/rsc/style.css" rel="stylesheet" media="screen" />
+        <link type="text/css" href="rsc/style.css" rel="stylesheet" media="screen" />
         <script src="rsc/javascript.js" type="text/javascript"></script>
     </head>
     <body onload="init()">
