@@ -17,8 +17,7 @@
  *
  */
 
-/* @todo: write a function for avoiding to have the same code twice
- * @todo: deal with if-modified-since
+/* @todo: deal with if-modified-since
  */
 
 function error404() {
@@ -26,6 +25,16 @@ function error404() {
     echo "<h1>404 Not Found</h1>";
     echo "The page that you have requested could not be found.";
     exit();    
+}
+function sendResource ($path, $filename, $contentType) {
+    $file = $path . $filename;
+    if (file_exists($file)) {
+        header('HTTP/1.1 203');                                         //send a success header
+        header('Content-type: ' . $contentType);                        //send the content-type
+        include $file;                                                  //simply drop the content
+    } else {                                                            //otherwise
+        error404();                                                     //not found
+    }
 }
 
 $pathJS = '../js/';                                                     //path to js/ directory
@@ -39,22 +48,15 @@ $split = preg_split("{/[{rsc}\/]*/}",$expectedURL);                     //I'm a 
 $file = htmlspecialchars($split[1]);
 
 if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) ob_start("ob_gzhandler"); else ob_start();
+
 if (preg_match('/.js$/',$file) > 0) {                                   //javascript file
-    if(file_exists($pathJS . $file)) {                                  //check that the file exists
-        header('HTTP/1.1 203');                                         //send a success header
-        header('Content-type: text/javascript; charset=UTF-8');         //send the content-type
-        include $pathJS . $file;                                        //simply drop the content
-    } else {
-        error404();
-    }
+
+    sendResource($pathJS, $file, 'text/javascript');
+    
 } else if (preg_match('/.css$/',$file) > 0) {                           //css file
-    if(file_exists($pathCSS . $file)) {                                 //check that the file exists
-        header('HTTP/1.1 203');                                         //send a success header
-        header('Content-type: text/css; charset=UTF-8');                //send the content-type
-        include $pathCSS . $file;                                       //simply drop the content
-    } else {
-        error404();
-    }
+
+    sendResource($pathCSS, $file, 'text/css');
+
 } else {
     error404();
 }
