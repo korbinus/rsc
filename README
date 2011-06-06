@@ -23,6 +23,8 @@ How to use this? Simply copy the directories rsc/ and src/ to your site. You can
 then edit rsc.htaccess and src/rsc.php to adapt the small configuration to your needs, and then 
 start to use RSC.
 
+Please note that this doesn't work with Opera. 
+
 Released under the GNU Affero General Public License.
 
 Enjoy! 
