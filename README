@@ -1,0 +1,20 @@
+RSC, ReSource Compression, is a very small PHP script which aims to compress on 
+the fly your JS and CSS files for a faster download. It is intended to be used 
+when your web hosting company doesn't allow you to use mod_deflate in Apache 
+(although you hopefully have compression available in the PHP configuration).
+
+This was initially developed for circumventing these hinders I experienced 
+while developing my pet project, geo:truc (http://www.geotruc.net)
+
+It is especially useful when used with hosted libraries, for instance jQuery. 
+Suppose you have a javascript directory name js/ and within it a file jQuery.js.
+
+Instead of making a link such as:
+<script src="js/jQuery.js" type="text/javascript"></script>
+where nothing is compressed, or using PHP for compressing and writing:
+<script src="js/compress.php?file=jQuery.js" type="text/javascript"></script>
+you simply write
+<script src="rsc/jQuery.js" type="text/javascript"></script>
+(the real file ISN'T in rsc/)
+
+RSC will then find js/jQuery.js and send it over the Internet, but compressed.

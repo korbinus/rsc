@@ -1,0 +1,14 @@
+/* 
+    Document   : style.php
+    Created on : Jun 6, 2011, 9:21:26 AM
+    Author     : Mickaël Graf <korbinus@gmail.com>
+    Description:
+        Purpose of the stylesheet follows.
+*/
+#letext {
+    border: 1px solid black;
+}
+#lecorps {
+    font-style: italic;
+    background-color: #decdcd;
+}
