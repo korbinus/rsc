@@ -20,7 +20,7 @@ you simply write
 RSC will then find js/jQuery.js and send it over the Internet, but compressed.
 
 How to use this? Simply copy the directories rsc/ and src/ to your site. You can
-then edit src/rsc.php to adapt the small configuration to your needs, and then 
+then edit rsc.htaccess and src/rsc.php to adapt the small configuration to your needs, and then 
 start to use RSC.
 
 Released under the GNU Affero General Public License.
