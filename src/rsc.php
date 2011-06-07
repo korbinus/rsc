@@ -17,28 +17,47 @@
  *
  */
 
-/* @todo: deal with if-modified-since
- */
-
 function error404() {
     header('HTTP/1.1 404 Not Found');
     echo "<h1>404 Not Found</h1>";
     echo "The page that you have requested could not be found.";
     exit();    
 }
-function sendResource ($path, $filename, $contentType) {
+function sendResource ($path, $filename, $contentType, $charset) {
     $file = $path . $filename;
     if (file_exists($file)) {
-        header('HTTP/1.1 203');                                         //send a success header
-        header('Content-type: ' . $contentType);                        //send the content-type
-        include $file;                                                  //simply drop the content
-    } else {                                                            //otherwise
-        error404();                                                     //not found
+        exitIfNotModifiedSince(setLastModified($file));
+        header('HTTP/1.1 203');                                            //send a success header
+        header('Content-type: ' . $contentType . '; charset=' . $charset); //send the content-type
+        include $file;                                                     //simply drop the content
+    } else {                                                               //otherwise
+        error404();                                                        //not found
+    }
+}
+//thanks to http://www.justsoftwaresolutions.co.uk/webdesign/provide-last-modified-headers-and-handle-if-modified-since-in-php.html
+function setLastModified($file)
+{
+    $lastModified=filemtime($file);
+
+    header('Last-Modified: ' . date("r",$lastModified));
+    return $lastModified;
+}
+function exitIfNotModifiedSince($lastModified)
+{
+    if(array_key_exists("HTTP_IF_MODIFIED_SINCE",$_SERVER))
+    {
+        $ifModifiedSince=strtotime(preg_replace('/;.*$/','',$_SERVER["HTTP_IF_MODIFIED_SINCE"]));
+        if($ifModifiedSince >= $lastModified)
+        {
+            header("HTTP/1.1 304 Not Modified");
+            exit();
+        }
     }
 }
 
 $pathJS = '../js/';                                                     //path to js/ directory
 $pathCSS = '../css/';                                                   //path to css/directory
+$charset = 'UTF-8';
 
 //taken from 
 //http://www.sean-o.com/blog/index.php/2009/08/11/tutorial-how-to-create-your-own-url-shortener/
@@ -51,11 +70,11 @@ if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) ob_start("ob_gzhandl
 
 if (preg_match('/.js$/',$file) > 0) {                                   //javascript file
 
-    sendResource($pathJS, $file, 'text/javascript');
+    sendResource($pathJS, $file, 'text/javascript', $charset);
     
 } else if (preg_match('/.css$/',$file) > 0) {                           //css file
 
-    sendResource($pathCSS, $file, 'text/css');
+    sendResource($pathCSS, $file, 'text/css', $charset);
 
 } else {
     error404();
